@@ -3,7 +3,7 @@ import Navbar from './components/Navbar/Navbar'
 import Todos from './components/Todos/Todos'
 
 const App = () => {
-    const apiURL = 'http://localhost:5000/todos/'
+    const apiURL = 'http://localhost:5000/todos'
     const [listOfTodos, setListOfTodos] = useState([])
     const [taskBody, setTaskBody] = useState('')
 
@@ -19,6 +19,7 @@ const App = () => {
 
     const addNewTodo = async (e) => {
         e.preventDefault()
+        document.getElementById("taskInput").value = null
 
         const requestOptions = {
             method: 'POST',
@@ -34,11 +35,21 @@ const App = () => {
     const newTaskBody = (e) => {
         setTaskBody(e.target.value)
     }
+
+    const deleteTask = async (taskID) => {
+        const requestOptions = {
+            method: 'DELETE',
+        };
+
+        await fetch(`${apiURL}/${taskID}`, requestOptions)
+        .then((response) => response.json())
+        .then((data) => setListOfTodos(data))
+    }
     
     return (
-        <div style={{height: '100vh', width: '100vw'}}>
+        <div style={{height: '100vh', width: '100vw', backgroundColor: "#eee"}}>
             <Navbar addNewTodo={addNewTodo} newTaskBody={newTaskBody} />
-            <Todos todos={listOfTodos} />
+            <Todos todos={listOfTodos} deleteTask={deleteTask} />
         </div>
     )
 }
