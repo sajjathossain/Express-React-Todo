@@ -1,4 +1,5 @@
 import todoList from '../todoList.js'
+import { v4 as uuidv4 } from 'uuid'
 
 // Get the todo list
 export const getAllTodo = (req, res) => {
@@ -7,7 +8,7 @@ export const getAllTodo = (req, res) => {
 
 // get a single todo item
 export const getOneTodo = (req, res) => {
-    const id = parseInt(req.params.id)
+    const id = req.params.id
     const requiredPost = todoList.find((todo) => todo.id === id)
 
     if(!requiredPost){
@@ -19,7 +20,7 @@ export const getOneTodo = (req, res) => {
 // add a new todo item to the list
 export const addNewTodo = (req, res) => {
     const todoBody = req.body
-    const newTodo = { id: todoList.length +1, ...todoBody, isDone: false }
+    const newTodo = { id: uuidv4(), ...todoBody, isDone: false }
 
     todoList.push(newTodo)
 
@@ -29,7 +30,7 @@ export const addNewTodo = (req, res) => {
 // update a iten in the todo list
 export const patchTodo = (req, res) => {
     const { task, isDone } = req.body
-    const id = parseInt(req.params.id)
+    const id = req.params.id
 
     const findTodo = todoList.find(todo => todo.id === id)
     
@@ -44,12 +45,12 @@ export const patchTodo = (req, res) => {
     findTodo.isDone = isDone
     findTodo.task = task
 
-    res.send(findTodo)
+    res.send(todoList)
 }
 
 // delete a item from the todo list
 export const deleteTodoItem = (req, res) => {
-    const id = parseInt(req.params.id)
+    const id = req.params.id
     const findTodo = todoList.find(todo => todo.id === id)
     if(!findTodo) {
         return res.status(404).json({ msg: `Id ${id} not found`})

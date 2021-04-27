@@ -36,6 +36,20 @@ const App = () => {
         setTaskBody(e.target.value)
     }
 
+    const doneTask = async (taskId) => {
+        const donePost = listOfTodos.find(todo => todo.id === taskId)
+
+        const requestOptions = {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({...donePost, isDone: true})
+        };
+
+        await fetch(`${apiURL}/${taskId}`, requestOptions)
+        .then((response) => response.json())
+        .then((data) => setListOfTodos(data))
+    }
+
     const deleteTask = async (taskID) => {
         const requestOptions = {
             method: 'DELETE',
@@ -49,7 +63,13 @@ const App = () => {
     return (
         <div style={{height: '100vh', width: '100vw', backgroundColor: "#eee"}}>
             <Navbar addNewTodo={addNewTodo} newTaskBody={newTaskBody} />
-            <Todos todos={listOfTodos} deleteTask={deleteTask} />
+            {
+                listOfTodos.length === 0 ? 
+                    <div className="container mt-4">
+                        <div className="alert alert-danger text-center p-3 font-weight-bold">No Task Available! Add one.</div>
+                    </div> : null
+            }
+            <Todos todos={listOfTodos} deleteTask={deleteTask} doneTask={doneTask} />
         </div>
     )
 }
