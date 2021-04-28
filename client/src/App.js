@@ -67,9 +67,9 @@ const App = () => {
                 listOfTodos.length === 0 ? 
                     <div className="container mt-4">
                         <div className="alert alert-danger text-center p-3 font-weight-bold">No Task Available! Add one.</div>
-                    </div> : null
+                    </div> 
+                    :   <Todos todos={listOfTodos} deleteTask={deleteTask} doneTask={doneTask} />
             }
-            <Todos todos={listOfTodos} deleteTask={deleteTask} doneTask={doneTask} />
         </div>
     )
 }
